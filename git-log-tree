@@ -336,11 +336,20 @@ print_git_log_tree_line() {
       elif [[ -v branch_parents[branch] ]]; then
         if ((branch < commit_branch)); then
           sprint_vertical_branch
-        elif ((${#queued_extra_parent_branches[@]} > 0)) && ((
-          queued_extra_child_branches[-${#queued_extra_child_branches[@]}]
-          > queued_extra_parent_branches[-${#queued_extra_parent_branches[@]}]
-        )); then
-          sprint_extra_parent_branch
+        elif ((${#queued_extra_parent_branches[@]} > 0)); then
+          if ((
+            branch
+            == queued_extra_parent_branches[-${#queued_extra_parent_branches[@]}]
+          )); then
+            sprint_extra_parent_branch
+          elif ((
+            queued_extra_child_branches[-${#queued_extra_child_branches[@]}]
+            > queued_extra_parent_branches[-${#queued_extra_parent_branches[@]}]
+          )); then
+            sprint_cross_parent_branch
+          else
+            sprint_cross_child_branch
+          fi
         else
           sprint_cross_child_branch
         fi
