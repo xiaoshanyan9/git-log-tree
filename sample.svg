@@ -1,0 +1,115 @@
+<svg height="400" width="611.2" xmlns="http://www.w3.org/2000/svg">
+<g transform="translate(8,8)">
+<filter filterUnits="userSpaceOnUse" height="456" id="shadow" width="667.2" x="-32" y="-24">
+<feGaussianBlur stdDeviation="3"/>
+</filter>
+<rect fill="#00000080" filter="url(#shadow)" height="384" rx="6" ry="6" width="595.2" x="1" y="1"/>
+<rect fill="#1e1e2e" height="384" rx="6" ry="6" width="595.2"/>
+<clipPath id="header">
+<rect height="24" width="595.2"/>
+</clipPath>
+<rect clip-path="url(#header)" fill="#303840" height="48" rx="6" ry="6" width="595.2"/>
+<line stroke="#00000080" stroke-width="0.5" x1="0" x2="595.2" y1="24" y2="24"/><text dominant-baseline="central" fill="#b0c0c0" font-family="system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif" font-size="13" font-weight="bold" text-anchor="middle" x="297.6" y="12">git log-tree</text>
+<g>
+<path d="M575.2,8 583.2,16 M575.2,16 583.2,8" fill="none" stroke="#b0c0c0" stroke-linecap="round" stroke-width="1.5"/>
+<path d="M559.2,8 L563.2,8 Q565.2,8,565.2,10 L565.2,14 Q565.2,16,563.2,16 L559.2,16 Q557.2,16,557.2,14 L557.2,10 Q557.2,8,559.2,8" fill="none" stroke="#b0c0c0" stroke-linecap="round" stroke-width="1.5"/>
+<path d="M539.2,12 547.2,12" fill="none" stroke="#b0c0c0" stroke-linecap="round" stroke-width="1.5"/>
+</g>
+<svg class="terminal" font-family="JetBrains Mono, Fira Code, Source Code Pro, Cascadia Code, Consolas, Menlo, Monaco, DejaVu Sans Mono, monospace, Symbols Nerd Font Mono" font-size="12" height="360" width="595.2" y="24">
+<svg fill="#cdd6f4" x="9.6" y="7.2">
+<g>
+<svg height="345.6" viewBox="0 0 48 28.8" width="576">
+<g stroke-width="0.025">
+<path d="M47.4,0 H48 V1.2 H47.4 Z" fill="#cdd6f4" stroke="#cdd6f4"/>
+<path d="M47.4,9.6 H48 V12 H47.4 Z" fill="#cdd6f4" stroke="#cdd6f4"/>
+<path d="M47.4,20.4 H48 V21.6 H47.4 Z" fill="#cdd6f4" stroke="#cdd6f4"/>
+<path d="M47.4,22.8 H48 V27.6 H47.4 Z" fill="#cdd6f4" stroke="#cdd6f4"/>
+</g>
+</svg>
+<svg height="14.4" overflow="hidden" width="576" y="0">
+<text xml:space="preserve" y="0.96em"><tspan fill="#f38ba8" font-weight="bold">●</tspan><tspan fill="#fab387" font-weight="bold">─╮</tspan><tspan fill="#f9e2af" x="2.4em">65318f4cf </tspan><tspan fill="#f9e2af">(</tspan><tspan fill="#94e2d5" font-weight="bold">HEAD</tspan><tspan fill="#f9e2af">, </tspan><tspan fill="#f9e2af" font-weight="bold">tag: </tspan><tspan fill="#f9e2af" font-weight="bold">v1.37.0</tspan><tspan fill="#f9e2af">)</tspan><tspan fill="#cdd6f4" x="21em">Merge </tspan><tspan fill="#cdd6f4">pull </tspan><tspan fill="#cdd6f4">request </tspan><tspan fill="#cdd6f4">#21531 </tspan><tspan fill="#cdd6f4">from </tspan><tspan fill="#cdd6f4">medyagh/chang</tspan><tspan fill="#1e1e2e">&gt;</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="576" y="14.4">
+<text xml:space="preserve" y="0.96em"><tspan fill="#f38ba8" font-weight="bold">│</tspan><tspan fill="#fab387" font-weight="bold" x="1.2em">●</tspan><tspan fill="#f9e2af" x="2.4em">cd89b25a5</tspan><tspan fill="#cdd6f4" x="8.4em">reword </tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="576" y="28.8">
+<text xml:space="preserve" y="0.96em"><tspan fill="#f38ba8" font-weight="bold">│</tspan><tspan fill="#fab387" font-weight="bold" x="1.2em">●</tspan><tspan fill="#f9e2af" x="2.4em">86e7c954d</tspan><tspan fill="#cdd6f4" x="8.4em">update </tspan><tspan fill="#cdd6f4">version </tspan><tspan fill="#cdd6f4">in </tspan><tspan fill="#cdd6f4">Makefile </tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="576" y="43.2">
+<text xml:space="preserve" y="0.96em"><tspan fill="#f38ba8" font-weight="bold">│</tspan><tspan fill="#fab387" font-weight="bold" x="1.2em">●</tspan><tspan fill="#f9e2af" x="2.4em">cf0f6caa9</tspan><tspan fill="#cdd6f4" x="8.4em">add </tspan><tspan fill="#cdd6f4">changelog </tspan><tspan fill="#cdd6f4">for </tspan><tspan fill="#cdd6f4">1.37.0 </tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="576" y="57.6">
+<text xml:space="preserve" y="0.96em"><tspan fill="#f38ba8" font-weight="bold">●</tspan><tspan fill="#fab387" font-weight="bold">─╯</tspan><tspan fill="#a6e3a1" font-weight="bold">─╮</tspan><tspan fill="#f9e2af" x="3.6em">5b32a4dc6</tspan><tspan fill="#cdd6f4" x="9.6em">Merge </tspan><tspan fill="#cdd6f4">pull </tspan><tspan fill="#cdd6f4">request </tspan><tspan fill="#cdd6f4">#21530 </tspan><tspan fill="#cdd6f4">from </tspan><tspan fill="#cdd6f4">medyagh/fix_changelogscript </tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="576" y="72">
+<text xml:space="preserve" y="0.96em"><tspan fill="#f38ba8" font-weight="bold">│</tspan><tspan fill="#a6e3a1" font-weight="bold" x="1.2em">●─╯</tspan><tspan fill="#f9e2af" x="3.6em">49397353d</tspan><tspan fill="#cdd6f4" x="9.6em">fix </tspan><tspan fill="#cdd6f4">boilerplate </tspan><tspan fill="#cdd6f4">whitespace </tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="576" y="86.4">
+<text xml:space="preserve" y="0.96em"><tspan fill="#f38ba8" font-weight="bold">│</tspan><tspan fill="#a6e3a1" font-weight="bold" x="1.2em">●</tspan><tspan fill="#f9e2af" x="2.4em">f49c77ebf</tspan><tspan fill="#cdd6f4" x="8.4em">ci: </tspan><tspan fill="#cdd6f4">changelog </tspan><tspan fill="#cdd6f4">script </tspan><tspan fill="#cdd6f4">paginate </tspan><tspan fill="#cdd6f4">through </tspan><tspan fill="#cdd6f4">more </tspan><tspan fill="#cdd6f4">than </tspan><tspan fill="#cdd6f4">250 </tspan><tspan fill="#cdd6f4">commits </tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="576" y="100.8">
+<text xml:space="preserve" y="0.96em"><tspan fill="#f38ba8" font-weight="bold">●</tspan><tspan fill="#a6e3a1" font-weight="bold">─╯</tspan><tspan fill="#fab387" font-weight="bold">─╮</tspan><tspan fill="#f9e2af" x="3.6em">0c7dcb8dd</tspan><tspan fill="#cdd6f4" x="9.6em">Merge </tspan><tspan fill="#cdd6f4">pull </tspan><tspan fill="#cdd6f4">request </tspan><tspan fill="#cdd6f4">#21498 </tspan><tspan fill="#cdd6f4">from </tspan><tspan fill="#cdd6f4">nirs/ai-playground-tutorial </tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="576" y="115.2">
+<text xml:space="preserve" y="0.96em"><tspan fill="#f38ba8" font-weight="bold">●</tspan><tspan fill="#94e2d5" font-weight="bold">─╮</tspan><tspan fill="#fab387" font-weight="bold" x="2.4em">│</tspan><tspan fill="#f9e2af" x="3.6em">693150586</tspan><tspan fill="#cdd6f4" x="9.6em">Merge </tspan><tspan fill="#cdd6f4">pull </tspan><tspan fill="#cdd6f4">request </tspan><tspan fill="#cdd6f4">#21526 </tspan><tspan fill="#cdd6f4">from </tspan><tspan fill="#cdd6f4">minikube-bot/kicbase-release-v0.</tspan><tspan fill="#1e1e2e">&gt;</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="576" y="129.6">
+<text xml:space="preserve" y="0.96em"><tspan fill="#f38ba8" font-weight="bold">●</tspan><tspan fill="#a6e3a1" font-weight="bold">─</tspan><tspan fill="#94e2d5" font-weight="bold">│</tspan><tspan fill="#a6e3a1" font-weight="bold">─</tspan><tspan fill="#fab387" font-weight="bold">│</tspan><tspan fill="#a6e3a1" font-weight="bold">─╮</tspan><tspan fill="#f9e2af" x="4.8em">b5cf54227</tspan><tspan fill="#cdd6f4" x="10.8em">Merge </tspan><tspan fill="#cdd6f4">pull </tspan><tspan fill="#cdd6f4">request </tspan><tspan fill="#cdd6f4">#21524 </tspan><tspan fill="#cdd6f4">from </tspan><tspan fill="#cdd6f4">minikube-bot/iso-release-v1.37</tspan><tspan fill="#1e1e2e">&gt;</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="576" y="144">
+<text xml:space="preserve" y="0.96em"><tspan fill="#f38ba8" font-weight="bold">│</tspan><tspan fill="#94e2d5" font-weight="bold" x="1.2em">│</tspan><tspan fill="#fab387" font-weight="bold" x="2.4em">●</tspan><tspan fill="#a6e3a1" font-weight="bold" x="3.6em">│</tspan><tspan fill="#f9e2af" x="4.8em">1fa69a33c</tspan><tspan fill="#cdd6f4" x="10.8em">docs: </tspan><tspan fill="#cdd6f4">Add </tspan><tspan fill="#cdd6f4">GPU </tspan><tspan fill="#cdd6f4">support </tspan><tspan fill="#cdd6f4">highlight </tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="576" y="158.4">
+<text xml:space="preserve" y="0.96em"><tspan fill="#f38ba8" font-weight="bold">│</tspan><tspan fill="#94e2d5" font-weight="bold" x="1.2em">│</tspan><tspan fill="#fab387" font-weight="bold" x="2.4em">●</tspan><tspan fill="#a6e3a1" font-weight="bold" x="3.6em">│</tspan><tspan fill="#f9e2af" x="4.8em">c6105f46f</tspan><tspan fill="#cdd6f4" x="10.8em">docs: </tspan><tspan fill="#cdd6f4">Add </tspan><tspan fill="#cdd6f4">AI </tspan><tspan fill="#cdd6f4">playground </tspan><tspan fill="#cdd6f4">tutorial </tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="576" y="172.8">
+<text xml:space="preserve" y="0.96em"><tspan fill="#f38ba8" font-weight="bold">│</tspan><tspan fill="#94e2d5" font-weight="bold" x="1.2em">●</tspan><tspan fill="#fab387" font-weight="bold" x="2.4em">│</tspan><tspan fill="#a6e3a1" font-weight="bold" x="3.6em">│</tspan><tspan fill="#f9e2af" x="4.8em">4fe92f238</tspan><tspan fill="#cdd6f4" x="10.8em">Release: </tspan><tspan fill="#cdd6f4">Update </tspan><tspan fill="#cdd6f4">kicbase </tspan><tspan fill="#cdd6f4">to </tspan><tspan fill="#cdd6f4">v0.0.48 </tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="576" y="187.2">
+<text xml:space="preserve" y="0.96em"><tspan fill="#f38ba8" font-weight="bold">│</tspan><tspan fill="#94e2d5" font-weight="bold" x="1.2em">│</tspan><tspan fill="#fab387" font-weight="bold" x="2.4em">│</tspan><tspan fill="#a6e3a1" font-weight="bold" x="3.6em">●</tspan><tspan fill="#f9e2af" x="4.8em">24e95f62f</tspan><tspan fill="#cdd6f4" x="10.8em">Release: </tspan><tspan fill="#cdd6f4">Update </tspan><tspan fill="#cdd6f4">ISO </tspan><tspan fill="#cdd6f4">to </tspan><tspan fill="#cdd6f4">v1.37.0 </tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="576" y="201.6">
+<text xml:space="preserve" y="0.96em"><tspan fill="#f38ba8" font-weight="bold">●</tspan><tspan fill="#94e2d5" font-weight="bold">─╯</tspan><tspan fill="#fab387" font-weight="bold">─╯</tspan><tspan fill="#94e2d5" font-weight="bold">─</tspan><tspan fill="#a6e3a1" font-weight="bold">│</tspan><tspan fill="#94e2d5" font-weight="bold">─╮</tspan><tspan fill="#f9e2af" x="6em">3a748c843</tspan><tspan fill="#cdd6f4" x="12em">Merge </tspan><tspan fill="#cdd6f4">pull </tspan><tspan fill="#cdd6f4">request </tspan><tspan fill="#cdd6f4">#21523 </tspan><tspan fill="#cdd6f4">from </tspan><tspan fill="#cdd6f4">minikube-bot/gomodtidy </tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="576" y="216">
+<text xml:space="preserve" y="0.96em"><tspan fill="#f38ba8" font-weight="bold">│</tspan><tspan fill="#a6e3a1" font-weight="bold" x="1.2em">╭───╯</tspan><tspan fill="#94e2d5" font-weight="bold" x="4.8em">●</tspan><tspan fill="#f9e2af" x="6em">a82c89975</tspan><tspan fill="#cdd6f4" x="12em">Update </tspan><tspan fill="#cdd6f4">auto-generated </tspan><tspan fill="#cdd6f4">docs </tspan><tspan fill="#cdd6f4">and </tspan><tspan fill="#cdd6f4">translations </tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="576" y="230.4">
+<text xml:space="preserve" y="0.96em"><tspan fill="#f38ba8" font-weight="bold">●</tspan><tspan fill="#a6e3a1" font-weight="bold">─╯</tspan><tspan fill="#fab387" font-weight="bold">─╮</tspan><tspan fill="#94e2d5" font-weight="bold" x="3.6em">╭─╯</tspan><tspan fill="#f9e2af" x="6em">3f78b51a5</tspan><tspan fill="#cdd6f4" x="12em">Merge </tspan><tspan fill="#cdd6f4">pull </tspan><tspan fill="#cdd6f4">request </tspan><tspan fill="#cdd6f4">#21522 </tspan><tspan fill="#cdd6f4">from </tspan><tspan fill="#cdd6f4">minikube-bot/gomodtidy </tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="576" y="244.8">
+<text xml:space="preserve" y="0.96em"><tspan fill="#f38ba8" font-weight="bold">●</tspan><tspan fill="#89b4fa" font-weight="bold">─╮</tspan><tspan fill="#94e2d5" font-weight="bold">─</tspan><tspan fill="#fab387" font-weight="bold">│</tspan><tspan fill="#94e2d5" font-weight="bold">─╯</tspan><tspan fill="#f9e2af" x="4.8em">5451b3f66</tspan><tspan fill="#cdd6f4" x="10.8em">Merge </tspan><tspan fill="#cdd6f4">pull </tspan><tspan fill="#cdd6f4">request </tspan><tspan fill="#cdd6f4">#21518 </tspan><tspan fill="#cdd6f4">from </tspan><tspan fill="#cdd6f4">kubernetes/dependabot/github_a</tspan><tspan fill="#1e1e2e">&gt;</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="576" y="259.2">
+<text xml:space="preserve" y="0.96em"><tspan fill="#f38ba8" font-weight="bold">│</tspan><tspan fill="#89b4fa" font-weight="bold" x="1.2em">│</tspan><tspan fill="#fab387" font-weight="bold" x="2.4em">●</tspan><tspan fill="#f9e2af" x="3.6em">0c50348c0</tspan><tspan fill="#cdd6f4" x="9.6em">Update </tspan><tspan fill="#cdd6f4">auto-generated </tspan><tspan fill="#cdd6f4">docs </tspan><tspan fill="#cdd6f4">and </tspan><tspan fill="#cdd6f4">translations </tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="576" y="273.6">
+<text xml:space="preserve" y="0.96em"><tspan fill="#f38ba8" font-weight="bold">●</tspan><tspan fill="#fab387" font-weight="bold">─</tspan><tspan fill="#89b4fa" font-weight="bold">│</tspan><tspan fill="#fab387" font-weight="bold">─╯</tspan><tspan fill="#a6e3a1" font-weight="bold">─╮</tspan><tspan fill="#f9e2af" x="4.8em">63483b658</tspan><tspan fill="#cdd6f4" x="10.8em">Merge </tspan><tspan fill="#cdd6f4">pull </tspan><tspan fill="#cdd6f4">request </tspan><tspan fill="#cdd6f4">#21519 </tspan><tspan fill="#cdd6f4">from </tspan><tspan fill="#cdd6f4">kubernetes/dependabot/github_a</tspan><tspan fill="#1e1e2e">&gt;</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="576" y="288">
+<text xml:space="preserve" y="0.96em"><tspan fill="#f38ba8" font-weight="bold">●</tspan><tspan fill="#94e2d5" font-weight="bold">─</tspan><tspan fill="#89b4fa" font-weight="bold">│</tspan><tspan fill="#94e2d5" font-weight="bold">─╮</tspan><tspan fill="#a6e3a1" font-weight="bold" x="3.6em">│</tspan><tspan fill="#f9e2af" x="4.8em">5654e1a40</tspan><tspan fill="#cdd6f4" x="10.8em">Merge </tspan><tspan fill="#cdd6f4">pull </tspan><tspan fill="#cdd6f4">request </tspan><tspan fill="#cdd6f4">#21520 </tspan><tspan fill="#cdd6f4">from </tspan><tspan fill="#cdd6f4">kubernetes/dependabot/go_modul</tspan><tspan fill="#1e1e2e">&gt;</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="576" y="302.4">
+<text xml:space="preserve" y="0.96em"><tspan fill="#f38ba8" font-weight="bold">●</tspan><tspan fill="#fab387" font-weight="bold">─</tspan><tspan fill="#89b4fa" font-weight="bold">│</tspan><tspan fill="#fab387" font-weight="bold">─</tspan><tspan fill="#94e2d5" font-weight="bold">│</tspan><tspan fill="#fab387" font-weight="bold">─</tspan><tspan fill="#a6e3a1" font-weight="bold">│</tspan><tspan fill="#fab387" font-weight="bold">─╮</tspan><tspan fill="#f9e2af" x="6em">d87522cca</tspan><tspan fill="#cdd6f4" x="12em">Merge </tspan><tspan fill="#cdd6f4">pull </tspan><tspan fill="#cdd6f4">request </tspan><tspan fill="#cdd6f4">#21521 </tspan><tspan fill="#cdd6f4">from </tspan><tspan fill="#cdd6f4">kubernetes/dependabot/go_mod</tspan><tspan fill="#1e1e2e">&gt;</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="576" y="316.8">
+<text xml:space="preserve" y="0.96em"><tspan fill="#f38ba8" font-weight="bold">●</tspan><tspan fill="#cba6f7" font-weight="bold">─</tspan><tspan fill="#89b4fa" font-weight="bold">│</tspan><tspan fill="#cba6f7" font-weight="bold">─</tspan><tspan fill="#94e2d5" font-weight="bold">│</tspan><tspan fill="#cba6f7" font-weight="bold">─</tspan><tspan fill="#a6e3a1" font-weight="bold">│</tspan><tspan fill="#cba6f7" font-weight="bold">─</tspan><tspan fill="#fab387" font-weight="bold">│</tspan><tspan fill="#cba6f7" font-weight="bold">─╮</tspan><tspan fill="#f9e2af" x="7.2em">f9cf92485</tspan><tspan fill="#cdd6f4" x="13.2em">Merge </tspan><tspan fill="#cdd6f4">pull </tspan><tspan fill="#cdd6f4">request </tspan><tspan fill="#cdd6f4">#21517 </tspan><tspan fill="#cdd6f4">from </tspan><tspan fill="#cdd6f4">minikube-bot/auto_bump_cni</tspan><tspan fill="#1e1e2e">&gt;</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="576" y="331.2">
+<text xml:space="preserve" y="0.96em"><tspan fill="#cdd6f4">: </tspan></text>
+</svg>
+</g>
+</svg>
+</svg>
+<rect fill="none" height="384" rx="6" ry="6" stroke="#0b0f1380" stroke-width="0.5" width="595.2"/>
+<rect fill="none" height="383" rx="5.5" ry="5.5" stroke="#ffffff40" stroke-width="0.5" width="594.2" x="0.5" y="0.5"/>
+</g>
+<style>
+@font-face {
+	font-family: JetBrains Mono;
+	font-weight: 100 800;
+	font-style: normal;
+	src: url(https://raw.githubusercontent.com/pamburus/fonts/refs/heads/main/JetBrainsMono/fonts/variable/JetBrainsMono%5Bwght%5D.woff2) format('woff2');
+}
+</style>
+</svg>
