@@ -1,8 +1,8 @@
 # 🪸 git-log-tree
 
-![](https://img.shields.io/badge/license-GPL--2.0-blue)
-![](https://img.shields.io/github/v/tag/xiaoshanyan9/git-log-tree)
-![](https://img.shields.io/github/last-commit/xiaoshanyan9/git-log-tree)
+[![](https://img.shields.io/badge/license-GPL--2.0-blue)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
+[![](https://img.shields.io/github/v/tag/xiaoshanyan9/git-log-tree)](https://github.com/xiaoshanyan9/git-log-tree/tags)
+[![](https://img.shields.io/github/last-commit/xiaoshanyan9/git-log-tree)](https://github.com/xiaoshanyan9/git-log-tree/commits/main/)
 
 **git-log-tree** is a fancy `git log --graph`.
 
