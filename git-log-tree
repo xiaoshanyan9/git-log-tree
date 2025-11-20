@@ -4,6 +4,94 @@
 
 set -e -o pipefail -u
 
+warn_invalid_option() {
+  echo "fatal: unrecognized argument: ${argument}" >&2
+  exit 128
+}
+
+warn_invalid_positional_parameter() {
+  echo "fatal: ambiguous argument '${argument}': unknown revision or path not in the working tree.
+Use '--' to separate paths from revisions, like this:
+'git <command> [<revision>...] -- [<file>...]'" >&2
+  exit 128
+}
+
+parse_arguments() {
+  if [[ -v GIT_LOG_TREE_COLOR_ENABLED ]]; then
+    :
+  elif [[ -v NO_COLOR ]] && [[ ${NO_COLOR} != "" ]]; then
+    GIT_LOG_TREE_COLOR_ENABLED=0
+  elif [[ -t 1 ]]; then
+    GIT_LOG_TREE_COLOR_ENABLED=1
+  else
+    GIT_LOG_TREE_COLOR_ENABLED=0
+  fi
+  GIT_LOG_TREE_GIT_LOG_ARGS=(
+    --topo-order
+    "--pretty=%h]%p ] %C(auto)%h%d %s"
+    --parents
+  )
+  if ((GIT_LOG_TREE_COLOR_ENABLED)); then
+    GIT_LOG_TREE_GIT_LOG_ARGS+=(--color)
+  fi
+  if [[ ! -v GIT_LOG_TREE_GIT_LOG_COMMAND ]]; then
+    GIT_LOG_TREE_GIT_LOG_COMMAND='git log "${GIT_LOG_TREE_GIT_LOG_ARGS[@]}"'
+  fi
+  local argument
+  local option_ended=0
+  for argument in "$@"; do
+    if ((option_ended)); then
+      GIT_LOG_TREE_GIT_LOG_ARGS+=("${argument}")
+    else
+      case ${argument} in
+        --)
+          GIT_LOG_TREE_GIT_LOG_ARGS+=("${argument}")
+          option_ended=1
+          ;;
+        --all) ;&
+        --date-order) ;&
+        --topo-order) ;&
+        --parents)
+          GIT_LOG_TREE_GIT_LOG_ARGS+=("${argument}")
+          ;;
+        --color) ;&
+        --color=always)
+          GIT_LOG_TREE_GIT_LOG_ARGS+=("${argument}")
+          GIT_LOG_TREE_COLOR_ENABLED=1
+          ;;
+        --color=never)
+          GIT_LOG_TREE_GIT_LOG_ARGS+=("${argument}")
+          GIT_LOG_TREE_COLOR_ENABLED=0
+          ;;
+        --color=auto)
+          if [[ -t 1 ]]; then
+            GIT_LOG_TREE_GIT_LOG_ARGS+=(--color)
+            GIT_LOG_TREE_COLOR_ENABLED=1
+          else
+            GIT_LOG_TREE_GIT_LOG_ARGS+=("${argument}")
+            GIT_LOG_TREE_COLOR_ENABLED=0
+          fi
+          ;;
+        -*)
+          warn_invalid_option
+          ;;
+        *)
+          if git rev-parse --verify "${argument}^0" &> /dev/null; then
+            GIT_LOG_TREE_GIT_LOG_ARGS+=("${argument}")
+          elif [[ -e ${argument} ]]; then
+            GIT_LOG_TREE_GIT_LOG_ARGS+=("${argument}")
+            option_ended=1
+          else
+            warn_invalid_positional_parameter
+          fi
+          ;;
+      esac
+    fi
+  done
+}
+
+parse_arguments "$@"
+
 readonly GIT_LOG_TREE_COLOR_CODES="
   1;38;2;243;139;168
   1;38;2;250;179;135
@@ -13,15 +101,9 @@ readonly GIT_LOG_TREE_COLOR_CODES="
   1;38;2;203;166;247
   1;38;2;245;194;231
 "
-readonly GIT_LOG_TREE_COLOR_ENABLED=${GIT_LOG_TREE_COLOR_ENABLED:-$((${NO_COLOR:+!}1))}
+readonly GIT_LOG_TREE_COLOR_ENABLED
 readonly GIT_LOG_TREE_MAX_INT_BITS=32
-if [[ ! -v GIT_LOG_TREE_GIT_LOG_COMMAND ]]; then
-  GIT_LOG_TREE_GIT_LOG_COMMAND='
-    git log --all --date-order "--pretty=%h]%p ] %C(auto)%h%d %s"'
-  if ((GIT_LOG_TREE_COLOR_ENABLED)); then
-    GIT_LOG_TREE_GIT_LOG_COMMAND+=" --color"
-  fi
-fi
+readonly GIT_LOG_TREE_GIT_LOG_ARGS
 readonly GIT_LOG_TREE_GIT_LOG_COMMAND
 
 init_colors() {
