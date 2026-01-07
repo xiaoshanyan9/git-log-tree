@@ -1,5 +1,5 @@
 #!/usr/bin/env bats
-# Copyright (C) 2025 xSY
+# Copyright (C) 2025, 2026 xSY
 # SPDX-License-Identifier: GPL-2.0
 
 setup_file() {
