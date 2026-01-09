@@ -1,0 +1,28 @@
+name: Codecov
+on:
+  - pull_request
+  - push
+jobs:
+  codecov:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: bats-core/bats-action@3.0.1
+      - run: |
+          sudo apt-get update
+          sudo apt-get -y install kcov
+      - uses: actions/checkout@v6.0.1
+      - run: |
+          sed -i 'N
+          /^\s*\nwarn_invalid_option\s*()\s*{$/ s/^/GIT_LOG_TREE_MAX_INT_BITS() { :; }/
+          /^\s*\n\(assign_branch_color\|insert_extra_parent_branch\)\s*()\s*{$/ {
+            s/^/GIT_LOG_TREE_MAX_INT_BITS/
+          }
+          P
+          D
+          ' git-log-tree
+      - run: kcov --include-path . coverage bats t/*.bats
+        env:
+          BATS_LIB_PATH: /usr/lib
+      - uses: codecov/codecov-action@v5.5.2
+        with:
+          fail_ci_if_error: true
