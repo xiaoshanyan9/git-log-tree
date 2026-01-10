@@ -9,9 +9,13 @@ jobs:
       - uses: bats-core/bats-action@3.0.1
       - uses: actions/checkout@v6.0.1
       - uses: sudo-bot/action-kcov@latest
-      - run: kcov --configure=bash-use-basic-parser=1 --include-path . coverage bats t/*.bats
         env:
           BATS_LIB_PATH: /usr/lib
+        with:
+          cli-args: --configure=bash-use-basic-parser=1 --include-path . coverage bats t/*.bats
+      # - run: kcov --configure=bash-use-basic-parser=1 --include-path . coverage bats t/*.bats
+      #   env:
+      #     BATS_LIB_PATH: /usr/lib
       - uses: codecov/codecov-action@v5.5.2
         with:
           fail_ci_if_error: true
