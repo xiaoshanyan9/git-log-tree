@@ -7,10 +7,8 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: bats-core/bats-action@3.0.1
-      - run: |
-          sudo apt-get update
-          sudo apt-get -y install kcov
       - uses: actions/checkout@v6.0.1
+      - uses: sudo-bot/action-kcov@latest
       - run: kcov --configure=bash-use-basic-parser=1 --include-path . coverage bats t/*.bats
         env:
           BATS_LIB_PATH: /usr/lib
