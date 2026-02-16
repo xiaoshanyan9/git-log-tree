@@ -1,0 +1,519 @@
+#!/usr/bin/env bash
+# Copyright (C) 2025, 2026 xSY
+# SPDX-License-Identifier: GPL-2.0
+# git-log-tree is a fancy git log --graph.
+# https://github.com/xiaoshanyan9/git-log-tree
+
+set -e -o pipefail -u
+
+warn_invalid_option() {
+  echo "fatal: unrecognized argument: ${argument}" >&2
+  exit 128
+}
+
+warn_invalid_positional_parameter() {
+  echo "fatal: ambiguous argument '${argument}': unknown revision or path not in the working tree.
+Use '--' to separate paths from revisions, like this:
+'git <command> [<revision>...] -- [<file>...]'" >&2
+  exit 128
+}
+
+parse_arguments() {
+  if [[ -v GIT_LOG_TREE_COLOR_ENABLED ]]; then
+    :
+  elif [[ -v NO_COLOR ]] && [[ ${NO_COLOR} != "" ]]; then
+    GIT_LOG_TREE_COLOR_ENABLED=0
+  elif [[ -t 1 ]]; then
+    GIT_LOG_TREE_COLOR_ENABLED=1
+  else
+    GIT_LOG_TREE_COLOR_ENABLED=0
+  fi
+  GIT_LOG_TREE_GIT_LOG_ARGS=(
+    --topo-order
+    "--pretty=%h]%p ] %C(auto)%h%d %s"
+    --parents
+  )
+  if ((GIT_LOG_TREE_COLOR_ENABLED)); then
+    GIT_LOG_TREE_GIT_LOG_ARGS+=(--color)
+  fi
+  if [[ ! -v GIT_LOG_TREE_GIT_LOG_COMMAND ]]; then
+    GIT_LOG_TREE_GIT_LOG_COMMAND='git log "${GIT_LOG_TREE_GIT_LOG_ARGS[@]}"'
+  fi
+  local argument
+  local option_ended=0
+  for argument in "$@"; do
+    if ((option_ended)); then
+      GIT_LOG_TREE_GIT_LOG_ARGS+=("${argument}")
+    else
+      case ${argument} in
+        --)
+          GIT_LOG_TREE_GIT_LOG_ARGS+=("${argument}")
+          option_ended=1
+          ;;
+        --all) ;&
+        --date-order) ;&
+        --topo-order) ;&
+        --parents)
+          GIT_LOG_TREE_GIT_LOG_ARGS+=("${argument}")
+          ;;
+        --color) ;&
+        --color=always)
+          GIT_LOG_TREE_GIT_LOG_ARGS+=("${argument}")
+          GIT_LOG_TREE_COLOR_ENABLED=1
+          ;;
+        --color=never)
+          GIT_LOG_TREE_GIT_LOG_ARGS+=("${argument}")
+          GIT_LOG_TREE_COLOR_ENABLED=0
+          ;;
+        --color=auto)
+          if [[ -t 1 ]]; then
+            GIT_LOG_TREE_GIT_LOG_ARGS+=(--color)
+            GIT_LOG_TREE_COLOR_ENABLED=1
+          else
+            GIT_LOG_TREE_GIT_LOG_ARGS+=("${argument}")
+            GIT_LOG_TREE_COLOR_ENABLED=0
+          fi
+          ;;
+        -*)
+          warn_invalid_option
+          ;;
+        *)
+          if git rev-parse --verify "${argument}^0" &> /dev/null; then
+            GIT_LOG_TREE_GIT_LOG_ARGS+=("${argument}")
+          elif [[ -e ${argument} ]]; then
+            GIT_LOG_TREE_GIT_LOG_ARGS+=("${argument}")
+            option_ended=1
+          else
+            warn_invalid_positional_parameter
+          fi
+          ;;
+      esac
+    fi
+  done
+}
+
+parse_arguments "$@"
+
+readonly GIT_LOG_TREE_COLOR_CODES="
+  1;38;2;243;139;168
+  1;38;2;250;179;135
+  1;38;2;166;227;161
+  1;38;2;148;226;213
+  1;38;2;137;180;250
+  1;38;2;203;166;247
+  1;38;2;245;194;231
+"
+readonly GIT_LOG_TREE_COLOR_ENABLED
+readonly GIT_LOG_TREE_MAX_INT_BITS=32
+readonly GIT_LOG_TREE_GIT_LOG_ARGS
+readonly GIT_LOG_TREE_GIT_LOG_COMMAND
+
+init_colors() {
+  color_codes=(${GIT_LOG_TREE_COLOR_CODES})
+  local color
+  if ((GIT_LOG_TREE_COLOR_ENABLED)); then
+    for ((color = 0; color < ${#color_codes[@]}; color++)); do
+      color_codes[color]=$'\e'[${color_codes[color]}m
+      color_counts[color]=0
+      count_sorted_colors[color]=$((color))
+    done
+    color_codes[color]=$'\e'[m
+  else
+    for ((color = 0; color < ${#color_codes[@]}; color++)); do
+      color_codes[color]=
+      color_counts[color]=0
+      count_sorted_colors[color]=$((color))
+    done
+    color_codes[color]=
+  fi
+}
+
+set_branch_color() {
+  branch_colors[branch]=$((color))
+  unset "count_sorted_colors[
+    color_counts[color]++ << GIT_LOG_TREE_MAX_INT_BITS / 2 | color
+  ]"
+  count_sorted_colors[color_counts[color] << GIT_LOG_TREE_MAX_INT_BITS / 2 | color]=$((
+    color
+  ))
+  unset "branch_last_used_colors[branch]"
+}
+
+assign_branch_color() {
+  local color
+  for color in "${count_sorted_colors[@]}"; do
+    if
+      { ((${#branch_colors[@]} < 1)) || ((color != branch_colors[-1])); } \
+      && { [[ ! -v last_used_color ]] || ((color != last_used_color)); } \
+      && {
+        [[ ! -v branch_last_used_colors[branch] ]] \
+        || ((color != branch_last_used_colors[branch]))
+      }
+    then
+      break
+    fi
+  done
+  set_branch_color
+  unset last_used_color
+}
+
+remove_branch_color() {
+  local color=$((branch_colors[branch]))
+  unset "branch_colors[branch]"
+  unset "count_sorted_colors[
+    color_counts[color]-- << GIT_LOG_TREE_MAX_INT_BITS / 2 | color
+  ]"
+  count_sorted_colors[color_counts[color] << GIT_LOG_TREE_MAX_INT_BITS / 2 | color]=$((
+    color
+  ))
+  last_used_color=$((color))
+  branch_last_used_colors[branch]=$((color))
+}
+
+insert_extra_parent_branch() {
+  branch_parents[branch]=${queued_parents[-${#queued_parents[@]}]}
+  unset "queued_parents[-${#queued_parents[@]}]"
+  queued_extra_parent_branches+=($((branch)))
+  assign_branch_color
+  queued_extra_parent_branch_colors+=($((branch_colors[branch])))
+}
+
+insert_commit_with_parent_basic() {
+  commit_branch=$((branch))
+  branch_parents[branch]=${queued_parents[-${#queued_parents[@]}]}
+  unset "queued_parents[-${#queued_parents[@]}]"
+  unset orphan_branch
+}
+
+insert_commit_with_parent_only() {
+  insert_commit_with_parent_basic
+  assign_branch_color
+}
+
+insert_straight_commit_with_parent_and_child() {
+  unset "queued_branches[-${#queued_branches[@]}]"
+  insert_commit_with_parent_basic
+}
+
+insert_bent_commit_with_parent_and_child() {
+  insert_commit_with_parent_basic
+  local color=$((branch_colors[queued_branches[-${#queued_branches[@]}]]))
+  set_branch_color
+}
+
+insert_commit_without_parent_basic() {
+  commit_branch=$((branch))
+  orphan_branch=$((branch))
+}
+
+insert_commit_without_parent_and_child() {
+  insert_commit_without_parent_basic
+  assign_branch_color
+}
+
+insert_straight_commit_with_child_only() {
+  unset "queued_branches[-${#queued_branches[@]}]"
+  insert_commit_without_parent_basic
+  unset "branch_parents[branch]"
+}
+
+insert_bent_commit_with_child_only() {
+  insert_commit_without_parent_basic
+  local color=$((branch_colors[queued_branches[-${#queued_branches[@]}]]))
+  set_branch_color
+}
+
+remove_original_bent_branch() {
+  unset "queued_branches[-${#queued_branches[@]}]"
+  unset "branch_parents[branch]"
+  queued_bent_branches+=($((branch)))
+  remove_branch_color
+}
+
+remove_extra_child_branch() {
+  unset "queued_branches[-${#queued_branches[@]}]"
+  unset "branch_parents[branch]"
+  queued_extra_child_branches+=($((branch)))
+  queued_extra_child_branch_colors+=($((branch_colors[branch])))
+  remove_branch_color
+}
+
+insert_moved_bent_branch() {
+  branch_parents[branch]=${branch_parents[queued_branches[-${#queued_branches[@]}]]}
+  queued_bent_branches+=($((branch)))
+  local color=$((branch_colors[queued_branches[-${#queued_branches[@]}]]))
+  set_branch_color
+}
+
+has_right_child_branch() {
+  local right_branch
+  for right_branch in "${queued_branches[@]}"; do
+    if [[ ${branch_parents[right_branch]} == "${commit}" ]]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
+process_git_log_line() {
+  local branch
+  if [[ -v orphan_branch ]]; then
+    branch=$((orphan_branch))
+    remove_branch_color
+  fi
+  local queued_branches=("${!branch_parents[@]}")
+  for ((branch = 0; ; branch++)); do
+    if ((${#queued_branches[@]} < 1)); then
+      if [[ -v commit_branch ]]; then
+        if ((${#queued_parents[@]} > 0)); then
+          insert_extra_parent_branch
+        else
+          break
+        fi
+      elif [[ -v orphan_branch ]] && ((branch == orphan_branch)); then
+        :
+      elif ((${#queued_parents[@]} > 0)); then
+        insert_commit_with_parent_only
+      else
+        insert_commit_without_parent_and_child
+      fi
+    elif ((${#queued_bent_branches[@]} % 2 == 1)); then
+      if [[ -v branch_parents[branch] ]]; then
+        remove_original_bent_branch
+      else
+        unset "branch_last_used_colors[branch]"
+      fi
+    elif [[ -v branch_parents[branch] ]]; then
+      if [[ ${branch_parents[branch]} != "${commit}" ]]; then
+        unset "queued_branches[-${#queued_branches[@]}]"
+      elif [[ -v commit_branch ]]; then
+        remove_extra_child_branch
+      elif ((${#queued_parents[@]} > 0)); then
+        insert_straight_commit_with_parent_and_child
+      else
+        insert_straight_commit_with_child_only
+      fi
+    elif [[ -v commit_branch ]]; then
+      if ((${#queued_parents[@]} > 0)); then
+        insert_extra_parent_branch
+      elif has_right_child_branch; then
+        unset "branch_last_used_colors[branch]"
+      else
+        insert_moved_bent_branch
+      fi
+    elif [[
+      ${branch_parents[queued_branches[-${#queued_branches[@]}]]} != "${commit}"
+    ]]; then
+      insert_moved_bent_branch
+    elif [[ -v orphan_branch ]] && ((branch == orphan_branch)); then
+      :
+    elif ((${#queued_parents[@]} > 0)); then
+      insert_bent_commit_with_parent_and_child
+    else
+      insert_bent_commit_with_child_only
+    fi
+  done
+}
+
+sprint_commit() {
+  if ((branch > 0)); then
+    git_log_tree_line+=" "
+  fi
+  if ((${#queued_extra_parent_branches[@]} > 0)); then
+    git_log_tree_line+=${color_codes[branch_colors[branch]]}●${color_codes[-1]}
+  elif [[ -v orphan_branch ]] && ((branch == orphan_branch)); then
+    git_log_tree_line+=${color_codes[branch_colors[branch]]}●${color_codes[-1]}
+  else
+    git_log_tree_line+=${color_codes[branch_colors[branch]]}●${color_codes[-1]}
+  fi
+}
+
+sprint_original_bent_branch() {
+  unset "queued_bent_branches[-${#queued_bent_branches[@]}]"
+  git_log_tree_line+=─╯${color_codes[-1]}
+}
+
+sprint_moved_bent_branch() {
+  unset "queued_bent_branches[-${#queued_bent_branches[@]}]"
+  if ((branch > 0)); then
+    git_log_tree_line+=" "
+  fi
+  git_log_tree_line+=${color_codes[branch_colors[branch]]}╭
+}
+
+sprint_extra_child_branch() {
+  unset "queued_extra_child_branches[-${#queued_extra_child_branches[@]}]"
+  git_log_tree_line+=${color_codes[
+    queued_extra_child_branch_colors[-${#queued_extra_child_branch_colors[@]}]
+  ]}─╯${color_codes[-1]}
+  unset "queued_extra_child_branch_colors[-${#queued_extra_child_branch_colors[@]}]"
+}
+
+sprint_extra_parent_branch() {
+  unset "queued_extra_parent_branches[-${#queued_extra_parent_branches[@]}]"
+  unset "queued_extra_parent_branch_colors[-${#queued_extra_parent_branch_colors[@]}]"
+  git_log_tree_line+=${color_codes[branch_colors[branch]]}─╮${color_codes[-1]}
+}
+
+sprint_vertical_branch() {
+  if ((branch > 0)); then
+    git_log_tree_line+=" "
+  fi
+  git_log_tree_line+=${color_codes[branch_colors[branch]]}│${color_codes[-1]}
+}
+
+sprint_horizontal_child_branch() {
+  git_log_tree_line+=${color_codes[
+    queued_extra_child_branch_colors[-${#queued_extra_child_branch_colors[@]}]
+  ]}──
+}
+
+sprint_gap() {
+  if ((branch > 0)); then
+    git_log_tree_line+="  "
+  else
+    git_log_tree_line+=" "
+  fi
+}
+
+sprint_cross_parent_branch() {
+  git_log_tree_line+=${color_codes[
+    queued_extra_parent_branch_colors[-${#queued_extra_parent_branch_colors[@]}]
+  ]}─${color_codes[-1]}${color_codes[branch_colors[branch]]}│${color_codes[-1]}
+}
+
+sprint_cross_child_branch() {
+  git_log_tree_line+=${color_codes[
+    queued_extra_child_branch_colors[-${#queued_extra_child_branch_colors[@]}]
+  ]}─${color_codes[-1]}${color_codes[branch_colors[branch]]}│${color_codes[-1]}
+}
+
+print_git_log_tree_line() {
+  local commit_branch
+  local queued_bent_branches=()
+  local queued_extra_child_branches=()
+  local queued_extra_child_branch_colors
+  local queued_extra_parent_branches=()
+  local queued_extra_parent_branch_colors
+  process_git_log_line
+  local branch
+  local git_log_tree_line
+  for ((branch = 0; ; branch++)); do
+    if ((branch == commit_branch)); then
+      sprint_commit
+    elif ((${#queued_bent_branches[@]} % 2 == 1)); then
+      if ((branch == queued_bent_branches[-${#queued_bent_branches[@]}])); then
+        sprint_original_bent_branch
+      else
+        git_log_tree_line+=──
+      fi
+    elif ((${#queued_extra_child_branches[@]} > 0)); then
+      if ((
+        branch == queued_extra_child_branches[-${#queued_extra_child_branches[@]}]
+      )); then
+        sprint_extra_child_branch
+      elif
+        ((${#queued_bent_branches[@]} > 0)) \
+        && ((branch == queued_bent_branches[-${#queued_bent_branches[@]}]))
+      then
+        sprint_moved_bent_branch
+      elif [[ -v branch_parents[branch] ]]; then
+        if ((branch < commit_branch)); then
+          sprint_vertical_branch
+        elif ((${#queued_extra_parent_branches[@]} > 0)); then
+          if ((
+            branch
+            == queued_extra_parent_branches[-${#queued_extra_parent_branches[@]}]
+          )); then
+            sprint_extra_parent_branch
+          elif ((
+            queued_extra_child_branches[-${#queued_extra_child_branches[@]}]
+            > queued_extra_parent_branches[-${#queued_extra_parent_branches[@]}]
+          )); then
+            sprint_cross_parent_branch
+          else
+            sprint_cross_child_branch
+          fi
+        else
+          sprint_cross_child_branch
+        fi
+      elif ((branch < commit_branch)); then
+        sprint_gap
+      else
+        sprint_horizontal_child_branch
+      fi
+    elif ((${#queued_extra_parent_branches[@]} > 0)); then
+      if ((
+        branch == queued_extra_parent_branches[-${#queued_extra_parent_branches[@]}]
+      )); then
+        sprint_extra_parent_branch
+      elif
+        ((${#queued_bent_branches[@]} > 0)) \
+        && ((branch == queued_bent_branches[-${#queued_bent_branches[@]}]))
+      then
+        sprint_moved_bent_branch
+      elif [[ -v branch_parents[branch] ]]; then
+        if ((branch < commit_branch)); then
+          sprint_vertical_branch
+        else
+          sprint_cross_parent_branch
+        fi
+      else
+        sprint_gap
+      fi
+    elif ((${#queued_bent_branches[@]} > 0)); then
+      if ((branch == queued_bent_branches[-${#queued_bent_branches[@]}])); then
+        sprint_moved_bent_branch
+      else
+        sprint_vertical_branch
+      fi
+    elif [[ -v branch_parents[branch] ]]; then
+      sprint_vertical_branch
+    elif ((branch < commit_branch)); then
+      sprint_gap
+    else
+      break
+    fi
+  done
+  sprint_remaining_contents
+  echo "${git_log_tree_line}"
+}
+
+sprint_remaining_contents() {
+  git_log_tree_line+=" ${remaining_contents}"
+}
+
+parse_git_log_line() {
+  read -d ] -r commit
+  local parent
+  while read -d " " -r parent; do
+    if [[ ${parent} == "]" ]]; then
+      break
+    elif [[ ${parent} != "" ]]; then
+      queued_parents+=("${parent}")
+    fi
+  done
+  read -r remaining_contents
+}
+
+print_git_log_tree() {
+  local color_codes
+  local color_counts
+  local count_sorted_colors
+  init_colors
+  local commit
+  local queued_parents=()
+  local remaining_contents
+  local orphan_branch
+  local branch_parents
+  local branch_colors=()
+  while parse_git_log_line; do
+    print_git_log_tree_line
+  done
+}
+
+run_git_log() {
+  eval "exec ${GIT_LOG_TREE_GIT_LOG_COMMAND}"
+}
+
+run_git_log | print_git_log_tree | less -F -R -S -X
